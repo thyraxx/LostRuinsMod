@@ -2,14 +2,9 @@
 using Nunppong;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
-using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Users;
-using UnityEditor;
+using Nunppong.Datasheet;
 
 namespace LostRuinsMod
 {
@@ -20,77 +15,20 @@ namespace LostRuinsMod
         public static BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static;
         public static RectTransform ngPlus;
         public static LabelView newGamePlusButton;
-
-        //[HarmonyPrefix]
-        //[HarmonyPatch(typeof(TitleView), "Show", new Type[] { typeof(float) })]
-        //public static bool ShowPatch(float __0, TitleView __instance, CanvasGroup ___hideGroup)
-        //{
-        //    typeof(GameGUIView).GetMethod("Show", flags).InvokeNotOverride(__instance, new object[] { __0 });
-        //    //MethodInvoker.GetHandler(AccessTools.Method(typeof(GameGUIView), nameof(GameGUIView.Show))).Invoke(__instance, new object[] { __0 });
-        //    Console.Out.WriteLine("AFTER SHOW");
-        //    __instance.hideGroup.alpha = 1f;
-
-
-        //    LabelView labelView = __instance.continueButton;
-        //    if (labelView != null)
-        //    {
-        //        labelView.Show();
-        //    }
-        //    LabelView labelView2 = __instance.newGameButton;
-        //    if (labelView2 != null)
-        //    {
-        //        labelView2.Show();
-        //    }
-        //    LabelView labelView3 = __instance.galleryButton;
-        //    if (labelView3 != null)
-        //    {
-        //        labelView3.Show();
-        //    }
-        //    LabelView labelView4 = __instance.settingsButton;
-        //    if (labelView4 != null)
-        //    {
-        //        labelView4.Show();
-        //    }
-        //    LabelView labelView5 = __instance.quitButton;
-        //    if (labelView5 != null)
-        //    {
-        //        labelView5.Show();
-        //    }
-
-        //    Console.Out.WriteLine("INVOKING");
-
-        //    typeof(TitleView).GetMethod("UpdateContinueButton", flags).Invoke(__instance, null);
-        //    typeof(TitleView).GetMethod("UpdateGalleryButton", flags).Invoke(__instance, null);
-        //    typeof(TitleView).GetMethod("HideAllButtons", flags).Invoke(__instance, null);
-        //    typeof(TitleView).GetMethod("ShowCurrentButton", flags).Invoke(__instance, null);
-
-
-        //    __instance.tooltipViews.SetTooltip(new TooltipInfo
-        //    {
-        //        button1 = InputButtonType.Accept,
-        //        button1Desc = StringManager.Get("AcceptTooltip")
-        //    });
-        //    __instance.tooltipViews.Show(0.2f);
-        //    //typeof(TitleView).GetMethod("HideAllButtons", flags).Invoke(typeof(TitleView), null);
-
-        //    return false;
-
-        //}
+        public static List<DropItem> gameItems = new List<DropItem>();
+        public static bool IsNGP { get; set; } = false;
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(TitleView), "Show")]
         public static void TitleViewAwake(TitleView __instance)
         {
-            
-
-            Console.Out.WriteLine("LABELVIEW AWAKE");
-            Console.Out.WriteLine(__instance.continueButton.label);
-
-            List<GameObject> objectsInScene = new List<GameObject>();
-
             bool passed = false;
             foreach (GameObject obj in Resources.FindObjectsOfTypeAll<GameObject>())
             {
+                // This is retarded, need to fix this
+                if (passed)
+                    break;
+
                 if (obj.scene.name == "Game" || obj.name == "game")
                 {
 
@@ -99,13 +37,14 @@ namespace LostRuinsMod
 
                     if (obj.name == "Menu")
                     {
-                        Console.Out.WriteLine("------- " + obj.GetComponentsInChildren<RectTransform>(true).Length);
+                        //Console.Out.WriteLine("------- " + obj.GetComponentsInChildren<RectTransform>(true).Length);
 
                         foreach (RectTransform obje in obj.GetComponentsInChildren<RectTransform>(false))
                         {
-                            Console.Out.WriteLine("Menu Child: " + obje.name + " GO: " + obje.gameObject.name + " Layer: " + obje.gameObject.layer + " TYPEOF: " + obje.GetType());
+                            //Console.Out.WriteLine("Menu Child: " + obje.name + " GO: " + obje.gameObject.name + " Layer: " + obje.gameObject.layer + " TYPEOF: " + obje.GetType());
                             if (obje.name == "NewGame" && !passed)
                             {
+                                // Ugly stuff, w/e
                                 passed = true;
                                 if (ngPlus == null)
                                 {
@@ -118,8 +57,10 @@ namespace LostRuinsMod
                                 ngPlus.gameObject.name = "NewGamePlus";
                                 ngPlus.SetSiblingIndex(0);
                                 LabelView label = ngPlus.GetComponent<LabelView>();
-                                label.label = "TEST";
+                                label.label = "NewGamePlus";
                                 label.SetText("New Game+");
+
+                                break;
                             }
                         }
                     } 
@@ -128,12 +69,12 @@ namespace LostRuinsMod
         }
 
 
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(TitleView), "UpdateContinueButton")]
-        public static void UpdateContinueButtonPrePatch()
-        {
-            Console.Out.WriteLine("UpdateContinueButton PASSED");
-        }
+        //[HarmonyPrefix]
+        //[HarmonyPatch(typeof(TitleView), "UpdateContinueButton")]
+        //public static void UpdateContinueButtonPrePatch()
+        //{
+        //    Console.Out.WriteLine("UpdateContinueButton PASSED");
+        //}
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(TitleView), "PrevButton")]
@@ -217,6 +158,7 @@ namespace LostRuinsMod
             //typeof(TitleView).GetMethod("ShowCurrentButton", flags).Invoke(__instance, null);
             MethodInvoker.GetHandler(AccessTools.Method(typeof(TitleView), "HideAllButtons")).Invoke(__instance, null);
             MethodInvoker.GetHandler(AccessTools.Method(typeof(TitleView), "ShowCurrentButton")).Invoke(__instance, null);
+            
             Singleton<SoundManager>.Instance.PlayUISound(GUISoundType.Navigate);
 
             return false;
@@ -272,7 +214,8 @@ namespace LostRuinsMod
             Singleton<SoundManager>.Instance.PlayUISound(GUISoundType.Toggle);
             if (__instance.CurrentButton == newGamePlusButton)
             {
-                Singleton<GUIManager>.Instance.SetState(GUIManager.GameGUIState.Load);
+                Singleton<GUIManager>.Instance.SetState(GUIManager.GameGUIState.Difficulty);
+                IsNGP = true;
                 return false;
             }
             if (__instance.CurrentButton == __instance.continueButton)
@@ -301,6 +244,57 @@ namespace LostRuinsMod
             }
 
             return false;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(GameManager), "LoadResourceAssets")]
+        public static void GameManagerLoadResourceAssetsPostPatch(GameManager __instance)
+        {
+            foreach (DropItem dropItem in __instance.DropItemManager.DropItems)
+            {
+                //Console.Out.WriteLine("WEAPON: " + dropItem.name);
+                gameItems.Add(dropItem);
+            }
+        }
+
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(PlayerInventory), "OnLoadStage")]
+        public static void StageManagerOnLoadCompletePostPatch(Stage stage, StageLoadMode loadMode, PlayerInventory __instance)
+        {
+            
+
+            if (loadMode == StageLoadMode.New || loadMode == StageLoadMode.Reset || loadMode == StageLoadMode.LoadSceneEvent)
+            {
+                __instance.Slots.Clear();
+                
+                if (IsNGP)
+                {
+                    foreach (DropItem dropItem in gameItems)
+                    {
+                        __instance.AddItem(dropItem, 1, __instance.NextSlotOrder);
+                    }
+                }
+
+                foreach (PlayerInitItems playerInitItems in Singleton<GameManager>.Instance.PlayerInitItems)
+                {
+                    if (playerInitItems.CheckDifficulty(Singleton<GameManager>.Instance.difficulty))
+                    {
+                        foreach (PlayerInitItems.InitItem initItem in playerInitItems.initItems)
+                        {
+                            __instance.Pick(initItem.item, initItem.count, false);
+                        }
+                    }
+                }
+            }
+            if (loadMode == StageLoadMode.Load && Singleton<GameManager>.Instance.difficulty == DifficultyMode.Hardcore)
+            {
+                __instance.AddItem(Singleton<DropItemManager>.Instance.dropItemSetting.diskItem, Singleton<SaveLoadManager>.Instance.LastDiskCount, 0);
+            }
+            if (loadMode == StageLoadMode.Load)
+            {
+                Singleton<GameEventManager>.Instance.OnPlayerInventoryLoad();
+            }
         }
     }
 }
