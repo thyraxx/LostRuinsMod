@@ -4,10 +4,10 @@ using HarmonyLib;
 
 namespace LostRuinsMod
 {
-    [BepInPlugin("org.thyraxx.lostruinstestmod", "Lost Ruins Movement unlock", "0.0.1")]
-    public class Class1 : BaseUnityPlugin
+    [BepInPlugin("org.thyraxx.lostruinsmod", "Lost Ruins Mod", "0.0.2")]
+    public class StartPatch : BaseUnityPlugin
     {
-        public const string pluginGuid = "org.thyraxx.lostruinstestmod";
+        public const string pluginGuid = "org.thyraxx.lostruinsmod";
         Harmony harmony = new Harmony(pluginGuid);
 
         public new static ManualLogSource Logger;
@@ -23,7 +23,7 @@ namespace LostRuinsMod
         {
             Logger.LogInfo("LostRuinsTestMod Unloaded!");
 
-            // For hot-reload
+            // For hot-reload scriptEngine
             harmony.UnpatchSelf();
         }
     }
