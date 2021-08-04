@@ -13,13 +13,13 @@ namespace LostRuinsMod
         public static void PadVibratePrePatch(ref float ___power, ref float ___maxRange, ref float ___minRange, ref float ___magnitude)
         {
             //Console.Out.WriteLine("BEFORE {0}", ___power);
-            ___power = 0.1f;
+            ___power = 0.05f;
             //Console.Out.WriteLine("AFTER {0}", ___power);
             //Console.Out.WriteLine("BEFORE {0}", ___minRange);
-            ___minRange = 0.1f;
+            ___minRange = 0.05f;
             //Console.Out.WriteLine("AFTER {0}", ___minRange);
             //Console.Out.WriteLine("BEFORE {0}", ___maxRange);
-            ___maxRange = 0.5f;
+            ___maxRange = 0.3f;
             //Console.Out.WriteLine("AFTER {0}", ___maxRange);
             //Console.Out.WriteLine("{0}", ___magnitude);
         }
