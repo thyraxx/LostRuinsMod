@@ -1,10 +1,6 @@
 ﻿using HarmonyLib;
 using Nunppong;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
-using Nunppong.Datasheet;
 
 namespace LostRuinsMod
 {
@@ -12,11 +8,7 @@ namespace LostRuinsMod
     [HarmonyPatch]
     class TitleViewPatch
     {
-        public static BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static;
-        public static RectTransform ngPlus;
-        public static LabelView newGamePlusButton;
-        public static List<DropItem> gameItems = new List<DropItem>();
-        public static bool IsNGP { get; set; } = false;
+       
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(TitleView), "Show")]
@@ -46,17 +38,17 @@ namespace LostRuinsMod
                             {
                                 // Ugly stuff, w/e
                                 passed = true;
-                                if (ngPlus == null)
+                                if (CustomGameInfo.ngPlusRect == null)
                                 {
-                                    ngPlus = UnityEngine.Object.Instantiate(obje, obje.transform.parent);
-                                    
+                                    CustomGameInfo.ngPlusRect = UnityEngine.Object.Instantiate(obje, obje.transform.parent);
+
                                     // TODO: Change place?
-                                    newGamePlusButton = ngPlus.GetComponent<LabelView>();
+                                    CustomGameInfo.newGamePlusButton = CustomGameInfo.ngPlusRect.GetComponent<LabelView>();
                                 }
 
-                                ngPlus.gameObject.name = "NewGamePlus";
-                                ngPlus.SetSiblingIndex(0);
-                                LabelView label = ngPlus.GetComponent<LabelView>();
+                                CustomGameInfo.ngPlusRect.gameObject.name = "NewGamePlus";
+                                CustomGameInfo.ngPlusRect.SetSiblingIndex(0);
+                                LabelView label = CustomGameInfo.ngPlusRect.GetComponent<LabelView>();
                                 label.label = "NewGamePlus";
                                 label.SetText("New Game+");
 
@@ -68,14 +60,6 @@ namespace LostRuinsMod
             }
         }
 
-
-        //[HarmonyPrefix]
-        //[HarmonyPatch(typeof(TitleView), "UpdateContinueButton")]
-        //public static void UpdateContinueButtonPrePatch()
-        //{
-        //    Console.Out.WriteLine("UpdateContinueButton PASSED");
-        //}
-
         [HarmonyPrefix]
         [HarmonyPatch(typeof(TitleView), "PrevButton")]
         public static bool PrevButtonPrePatch(TitleView __instance)
@@ -86,31 +70,30 @@ namespace LostRuinsMod
             }
             if (__instance.CurrentButton == __instance.continueButton)
             {
-                typeof(TitleView).GetMethod("SetCurentButton", flags).Invoke(__instance, new object[] { newGamePlusButton });
-                
+                typeof(TitleView).GetMethod("SetCurentButton", CustomGameInfo.flags).Invoke(__instance, new object[] { CustomGameInfo.newGamePlusButton });
             }
             else if (__instance.CurrentButton == __instance.newGameButton && __instance.continueButton.isActiveAndEnabled)
             {
-                typeof(TitleView).GetMethod("SetCurentButton", flags).Invoke(__instance, new object[] { __instance.continueButton }); 
+                typeof(TitleView).GetMethod("SetCurentButton", CustomGameInfo.flags).Invoke(__instance, new object[] { __instance.continueButton }); 
             }
             else if (__instance.CurrentButton == __instance.galleryButton)
             {
-                typeof(TitleView).GetMethod("SetCurentButton", flags).Invoke(__instance, new object[] { __instance.newGameButton });
+                typeof(TitleView).GetMethod("SetCurentButton", CustomGameInfo.flags).Invoke(__instance, new object[] { __instance.newGameButton });
             }
             else if (__instance.CurrentButton == __instance.settingsButton)
             {
                 if (__instance.galleryButton.isActiveAndEnabled)
                 {
-                    typeof(TitleView).GetMethod("SetCurentButton", flags).Invoke(__instance, new object[] { __instance.galleryButton});
+                    typeof(TitleView).GetMethod("SetCurentButton", CustomGameInfo.flags).Invoke(__instance, new object[] { __instance.galleryButton});
                 }
                 else
                 {
-                    typeof(TitleView).GetMethod("SetCurentButton", flags).Invoke(__instance, new object[] { __instance.newGameButton });
+                    typeof(TitleView).GetMethod("SetCurentButton", CustomGameInfo.flags).Invoke(__instance, new object[] { __instance.newGameButton });
                 }
             }
             else if (__instance.CurrentButton == __instance.quitButton)
             {
-                typeof(TitleView).GetMethod("SetCurentButton", flags).Invoke(__instance, new object[] { __instance.settingsButton });
+                typeof(TitleView).GetMethod("SetCurentButton", CustomGameInfo.flags).Invoke(__instance, new object[] { __instance.settingsButton });
             }
             
             //typeof(TitleView).GetMethod("HideAllButtons", flags).Invoke(__instance, null);
@@ -125,33 +108,33 @@ namespace LostRuinsMod
         [HarmonyPatch(typeof(TitleView), "NextButton")]
         public static bool NextButtonPrePatch(TitleView __instance)
         {
-            if (__instance.CurrentButton == newGamePlusButton && __instance.continueButton.isActiveAndEnabled)
+            if (__instance.CurrentButton == CustomGameInfo.newGamePlusButton && __instance.continueButton.isActiveAndEnabled)
             {
-                typeof(TitleView).GetMethod("SetCurentButton", flags).Invoke(__instance, new object[] { __instance.continueButton });
+                typeof(TitleView).GetMethod("SetCurentButton", CustomGameInfo.flags).Invoke(__instance, new object[] { __instance.continueButton });
 
             }
             else if (__instance.CurrentButton == __instance.continueButton)
             {
-                typeof(TitleView).GetMethod("SetCurentButton", flags).Invoke(__instance, new object[] { __instance.newGameButton });
+                typeof(TitleView).GetMethod("SetCurentButton", CustomGameInfo.flags).Invoke(__instance, new object[] { __instance.newGameButton });
             }
             else if (__instance.CurrentButton == __instance.newGameButton)
             {
                 if (__instance.galleryButton.isActiveAndEnabled)
                 {
-                    typeof(TitleView).GetMethod("SetCurentButton", flags).Invoke(__instance, new object[] { __instance.galleryButton });
+                    typeof(TitleView).GetMethod("SetCurentButton", CustomGameInfo.flags).Invoke(__instance, new object[] { __instance.galleryButton });
                 }
                 else
                 {
-                    typeof(TitleView).GetMethod("SetCurentButton", flags).Invoke(__instance, new object[] { __instance.settingsButton });
+                    typeof(TitleView).GetMethod("SetCurentButton", CustomGameInfo.flags).Invoke(__instance, new object[] { __instance.settingsButton });
                 }
             }
             else if (__instance.CurrentButton == __instance.galleryButton)
             {
-                typeof(TitleView).GetMethod("SetCurentButton", flags).Invoke(__instance, new object[] { __instance.settingsButton });
+                typeof(TitleView).GetMethod("SetCurentButton", CustomGameInfo.flags).Invoke(__instance, new object[] { __instance.settingsButton });
             }
             else if (__instance.CurrentButton == __instance.settingsButton)
             {
-                typeof(TitleView).GetMethod("SetCurentButton", flags).Invoke(__instance, new object[] { __instance.quitButton });
+                typeof(TitleView).GetMethod("SetCurentButton", CustomGameInfo.flags).Invoke(__instance, new object[] { __instance.quitButton });
             }
 
             //typeof(TitleView).GetMethod("HideAllButtons", flags).Invoke(__instance, null);
@@ -168,9 +151,9 @@ namespace LostRuinsMod
         [HarmonyPatch(typeof(TitleView), "HideAllButtons")]
         public static bool HideAllButtonsPrePatch(TitleView __instance)
         {
-            if(newGamePlusButton != null)
+            if(CustomGameInfo.newGamePlusButton != null)
             {
-                newGamePlusButton.Disable();
+                CustomGameInfo.newGamePlusButton.Disable();
             }
 
             LabelView labelView = __instance.continueButton;
@@ -212,10 +195,9 @@ namespace LostRuinsMod
                 return false;
             }
             Singleton<SoundManager>.Instance.PlayUISound(GUISoundType.Toggle);
-            if (__instance.CurrentButton == newGamePlusButton)
+            if (__instance.CurrentButton == CustomGameInfo.newGamePlusButton)
             {
                 Singleton<GUIManager>.Instance.SetState(GUIManager.GameGUIState.Difficulty);
-                IsNGP = true;
                 return false;
             }
             if (__instance.CurrentButton == __instance.continueButton)
@@ -244,57 +226,6 @@ namespace LostRuinsMod
             }
 
             return false;
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(GameManager), "LoadResourceAssets")]
-        public static void GameManagerLoadResourceAssetsPostPatch(GameManager __instance)
-        {
-            foreach (DropItem dropItem in __instance.DropItemManager.DropItems)
-            {
-                //Console.Out.WriteLine("WEAPON: " + dropItem.name);
-                gameItems.Add(dropItem);
-            }
-        }
-
-
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(PlayerInventory), "OnLoadStage")]
-        public static void StageManagerOnLoadCompletePostPatch(Stage stage, StageLoadMode loadMode, PlayerInventory __instance)
-        {
-            
-
-            if (loadMode == StageLoadMode.New || loadMode == StageLoadMode.Reset || loadMode == StageLoadMode.LoadSceneEvent)
-            {
-                __instance.Slots.Clear();
-                
-                if (IsNGP)
-                {
-                    foreach (DropItem dropItem in gameItems)
-                    {
-                        __instance.AddItem(dropItem, 1, __instance.NextSlotOrder);
-                    }
-                }
-
-                foreach (PlayerInitItems playerInitItems in Singleton<GameManager>.Instance.PlayerInitItems)
-                {
-                    if (playerInitItems.CheckDifficulty(Singleton<GameManager>.Instance.difficulty))
-                    {
-                        foreach (PlayerInitItems.InitItem initItem in playerInitItems.initItems)
-                        {
-                            __instance.Pick(initItem.item, initItem.count, false);
-                        }
-                    }
-                }
-            }
-            if (loadMode == StageLoadMode.Load && Singleton<GameManager>.Instance.difficulty == DifficultyMode.Hardcore)
-            {
-                __instance.AddItem(Singleton<DropItemManager>.Instance.dropItemSetting.diskItem, Singleton<SaveLoadManager>.Instance.LastDiskCount, 0);
-            }
-            if (loadMode == StageLoadMode.Load)
-            {
-                Singleton<GameEventManager>.Instance.OnPlayerInventoryLoad();
-            }
         }
     }
 }
