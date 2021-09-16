@@ -2,8 +2,7 @@
 This is a mod which adds a new game mode, New Game+. This unlocks all items for the specific difficulty.
 More things might come.
 
-#### Warning
-Playing this mod might unlock achievements, like finding all weapons.
+**Warning**: Playing this mod might unlock achievements, like finding all weapons.
 
 ## Prerequisite
 - BepInEx v5.x.x
