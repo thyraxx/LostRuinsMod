@@ -13,4 +13,10 @@ namespace LostRuinsMod
         public static List<DropItem> gameItems = new List<DropItem>();
         public static bool IsNGP { get; set; } = false;
     }
+
+    // To add our own Difficulty enums
+    enum DifficultyModeExtra
+    {
+        BossRush = 6
+    }
 }
