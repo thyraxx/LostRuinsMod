@@ -395,3 +395,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+LostRuinsMod/obj/Debug/LostRuinsMod.dll
+
+LostRuinsMod/bin/Debug/LostRuinsMod.dll
