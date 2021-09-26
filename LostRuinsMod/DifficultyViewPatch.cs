@@ -78,7 +78,8 @@ namespace LostRuinsMod
         {
 			if(__instance.title.text.Equals("DifficultyMode." + (int)DifficultyModeExtra.BossRush))
             {
-				__instance.title.text = "Dif2";
+				__instance.title.text = "Boss Rush";
+				__instance.desc.text = "Challenge yourself to defeat all bosses after each other.";
             }
 		}
     }
