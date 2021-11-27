@@ -5,7 +5,7 @@ More things might come.
 **Warning**: Playing this mod might unlock achievements, like finding all weapons.
 
 ## Prerequisite
-- BepInEx v5.x.x
+- BepInEx v5.x.x x86
 
 ## Install
 Extract [BepInEx 5 x86](https://github.com/BepInEx/BepInEx/releases) into the the LostRuins folder where the LostRuins.exe is located.
