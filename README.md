@@ -1,6 +1,6 @@
 # LostRuinsMod
 This is a mod which adds a new game mode, New Game+. This unlocks all items for the specific difficulty.
-More things might come.
+~~More things might come.~~ I'm not planning working on this anymore, don't expect anything else to be added.
 
 **Warning**: Playing this mod might unlock achievements, like finding all weapons.
 
