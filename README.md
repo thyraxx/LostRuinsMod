@@ -12,5 +12,8 @@ Extract [BepInEx 5 x86](https://github.com/BepInEx/BepInEx/releases) into the th
 
 **e.g**: (C:\Program Files (x86)\Steam\steamapps\common\LostRuins)  
 Download and drop the dll you can download [here](https://github.com/thyraxx/LostRuinsMod/releases/latest) into **/BepInEx/plugins** folder.
+If the **plugins** folder doesn't exist yet, you could start the game first with only BepInEx, it should create it. 
+**OR**
+Immediately create the folder yourself and place the mod into the plugins folder, should also work.
 
 Start the game and the NewGame+ option should be on the title screen.
