@@ -4,8 +4,9 @@ This is a mod which adds a new game mode, New Game+. This unlocks all items for 
 
 **Warning**: Playing this mod might unlock achievements, like finding all weapons.
 
-## Prerequisite
-- BepInEx v5.x.x x86
+## Prerequisite and tested on:
+- BepInEx v5.3.23.1 x86
+- BepInEx v5.3.23.2 x86
 
 ## Install
 Extract [BepInEx 5 x86](https://github.com/BepInEx/BepInEx/releases) into the the LostRuins folder where the LostRuins.exe is located.
